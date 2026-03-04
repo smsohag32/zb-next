@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 5%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 5%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 5%;
+
+    --primary: 0 72% 51%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 10%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 0 72% 51%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 72% 51%;
+
+    --radius: 0.4rem;
+
+    /* Custom tokens */
+    --hero-gradient: linear-gradient(135deg, hsl(0 72% 51%) 0%, hsl(0 84% 40%) 100%);
+    --card-shadow: 0 4px 20px -4px hsl(0 0% 0% / 0.08);
+    --card-shadow-hover: 0 12px 40px -8px hsl(0 0% 0% / 0.15);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 26%;
+    --sidebar-primary: 0 0% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 91%;
+    --sidebar-ring: 0 72% 51%;
+  }
+
+  .dark {
+    --background: 0 0% 5%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 72% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 0 72% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 0 72% 55%;
+
+    --hero-gradient: linear-gradient(135deg, hsl(0 72% 45%) 0%, hsl(0 84% 35%) 100%);
+    --card-shadow: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
+    --card-shadow-hover: 0 12px 40px -8px hsl(0 0% 0% / 0.5);
+
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 0 72% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 0 72% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Helvetica", "Arial", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--hero-gradient);
+  }
+
+  .glass {
+    @apply backdrop-blur-md bg-background/80;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300;
+    box-shadow: var(--card-shadow);
+  }
+
+  .card-hover:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-4px);
+  }
+
+  /* Tiptap Content Styles */
+  .tiptap-content {
+    font-family: "Manrope", "Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Noto Sans Bengali", "Hind Siliguri", sans-serif;
+    line-height: 1.6;
+    word-wrap: break-word;
+  }
+
+  .tiptap-content p {
+    margin-top: 0.25em !important;
+    margin-bottom: 0.25em !important;
+    min-height: 1.5rem;
+    white-space: pre-wrap;
+  }
+
+  .tiptap-content p:empty::before,
+  .tiptap-content p:has(br):empty::before {
+    content: "\00a0";
+    display: inline-block;
+  }
+
+  .tiptap-content ul,
+  .tiptap-content ol {
+    padding-left: 1.5rem !important;
+    margin: 1rem 0 !important;
+  }
+
+  .tiptap-content ul {
+    list-style-type: disc !important;
+  }
+
+  .tiptap-content ol {
+    list-style-type: decimal !important;
+  }
+
+  .tiptap-content li {
+    margin-bottom: 0.25rem !important;
+  }
+
+  .tiptap-content hr {
+    border: none;
+    border-top: 2px solid hsl(var(--border));
+    margin: 2rem 0;
+  }
+
+  .tiptap-content mark {
+    background-color: #fef08a;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+
+  .tiptap-content h1 {
+    font-size: 2.25rem !important;
+    font-weight: 800 !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .tiptap-content h2 {
+    font-size: 1.875rem !important;
+    font-weight: 700 !important;
+    margin-top: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .tiptap-content h3 {
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    margin-top: 1rem !important;
+    margin-bottom: 0.5rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .tiptap-content table {
+    border-collapse: collapse !important;
+    table-layout: fixed;
+    width: 100%;
+    margin: 1.5rem 0 !important;
+    overflow: hidden;
+    border: 1px solid #94a3b8 !important;
+  }
+
+  .tiptap-content td,
+  .tiptap-content th {
+    min-width: 1em;
+    height: 40px !important;
+    border: 1px solid #94a3b8 !important;
+    padding: 8px 12px !important;
+    vertical-align: top;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  .tiptap-content td p,
+  .tiptap-content th p {
+    margin: 0 !important;
+  }
+
+  .tiptap-content th {
+    font-weight: bold;
+    text-align: left;
+    background-color: hsl(var(--muted) / 0.5);
+  }
+
+  .tiptap-content .tableWrapper {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+
+  .page-ani {
+    animation: fade-in 0.4s ease-out forwards;
+  }
+}

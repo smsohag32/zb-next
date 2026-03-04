@@ -1,0 +1,78 @@
+﻿error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(auth)/forgot-password/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(auth)/layout.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(auth)/login/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(auth)/register/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(auth)/reset-password/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(auth)/verify-otp/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(dashboard)/dashboard/addresses/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(dashboard)/dashboard/orders/[orderId]/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(dashboard)/dashboard/orders/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(dashboard)/dashboard/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(dashboard)/dashboard/wishlist/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(dashboard)/layout.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/cart/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/categories/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/checkout/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/contact/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/faq/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/order/details/[orderId]/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/privacy-policy/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/products/[slug]/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/products/category/[slug]/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/products/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/terms-conditions/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/app/(main)/wishlist/page.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
+error TS6053: File 'D:/sohag/dev/ecomm/zb-next/.next/types/cache-life.d.ts' not found.
+  The file is in the program because:
+    Matched by include pattern '.next/types/**/*.ts' in 'D:/sohag/dev/ecomm/zb-next/tsconfig.json'
