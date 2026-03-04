@@ -35,12 +35,14 @@ jobs:
           cp -r .next/static .next/standalone/.next/
 
       - name: Deploy via FTP
+        # Documentation: https://github.com/SamKirkland/FTP-Deploy-Action
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
+          # IMPORTANT: Add these secrets in GitHub Settings > Secrets and variables > Actions
           server: ${{ secrets.SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ${{ secrets.FTP_PROTOCOL }}
+          protocol: ${{ secrets.FTP_PROTOCOL || 'ftp' }} # Defaults to 'ftp' if secret is missing
           local-dir: .next/standalone/
           state-name: .next-ftp-deploy-state.json
         
