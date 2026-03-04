@@ -94,7 +94,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             className="group block">
             <div className="relative lg:aspect-[4/4] overflow-hidden bg-muted">
                {/* Badges */}
-               <div className="absolute top-3 left-0  z-10 flex flex-col gap-2">
+               <div className="absolute top-2 left-0  z-10 flex flex-col gap-2">
                   {product.isNew && (
                      <Badge className="bg-primary rounded-e-full text-primary-foreground ">New</Badge>
                   )}
@@ -112,7 +112,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                   variant="secondary"
                   size="icon"
                   className={cn(
-                     "absolute top-2 right-2 z-10 h-8 w-8 transition-all duration-300",
+                     "absolute top-1 right-2 z-10 h-8 w-8 transition-all duration-300",
                      "lg:opacity-0 lg:group-hover:opacity-100",
                      inWishlist ? "opacity-100 text-primary" : "bg-background/80 backdrop-blur-sm",
                   )}
@@ -166,15 +166,15 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                   variant="outline"
                   size="icon"
                   aria-label="Add to cart"
-                  className="h-8.5 w-auto shrink-0 w-9  shadow-sm border-primary text-primary hover:bg-primary/10 hover:text-primary"
+                  className=" w-auto h-9 shrink-0 rounded-none w-9"
                   onClick={handleAddToCart}
                   disabled={!product.inStock && !product.sizes?.some((s) => (s.quantity || 0) > 0)}>
-                  <ShoppingBag className="h-4  w-4" />
+                  <Plus className="h-4  w-4" />
                </Button>
                <Button
                   size="sm"
-                  variant={"outline"}
-                  className="h-9 flex-1  shadow-sm gap-1.5 border-primary text-primary hover:bg-primary/10 hover:text-primary"
+                  variant={"default"}
+                  className=" flex-1  h-9 flex-1 gap-2 bg-zinc-900 !text-white hover:bg-zinc-800  rounded-none  active:scale-95 transition-all border-none "
                   onClick={handleBuyNow}
                   disabled={!product.inStock && !product.sizes?.some((s) => (s.quantity || 0) > 0)}>
                   <ShoppingCart className="h-4 w-4" />
@@ -184,7 +184,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
 
             {/* Info */}
             <div className="space-y-1 mt-4 lg:mt-3 px-1">
-               <h3 className="font-medium text-sm lg:text-base line-clamp-2 group-hover:text-primary transition-colors leading-tight min-h-[1.5rem] lg:min-h-0">
+               <h3 className="font-medium text-sm lg:text-base line-clamp-2  transition-colors leading-tight min-h-[1.5rem] lg:min-h-0">
                   {product.name}
                </h3>
                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 lg:pt-1">
