@@ -22,20 +22,10 @@
       "static/css/app/(main)/page.css",
       "static/chunks/app/(main)/page.js"
     ],
-    "/(main)/products/[slug]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(main)/products/[slug]/page.js"
-    ],
     "/(main)/checkout/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/checkout/page.js"
-    ],
-    "/(main)/cart/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(main)/cart/page.js"
     ]
   }
 }

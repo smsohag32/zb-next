@@ -1,6 +1,4 @@
 {
-  "/(main)/page": "app/(main)/page.js",
-  "/(main)/products/[slug]/page": "app/(main)/products/[slug]/page.js",
-  "/(main)/cart/page": "app/(main)/cart/page.js",
-  "/(main)/checkout/page": "app/(main)/checkout/page.js"
+  "/(main)/checkout/page": "app/(main)/checkout/page.js",
+  "/(main)/page": "app/(main)/page.js"
 }

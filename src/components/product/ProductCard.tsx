@@ -94,14 +94,14 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             className="group block">
             <div className="relative lg:aspect-[4/4] overflow-hidden bg-muted">
                {/* Badges */}
-               <div className="absolute top-2 left-0  z-10 flex flex-col gap-2">
+               <div className="absolute top-2 left-2  z-10 flex flex-col gap-2">
                   {product.isNew && (
-                     <Badge className="bg-primary rounded-e-full text-primary-foreground ">New</Badge>
+                     <Badge className="bg-primary rounded-sm text-xs text-primary-foreground ">New</Badge>
                   )}
                   {product.originalPrice && product.originalPrice > product.price && (
                      <Badge
                         variant="secondary"
-                        className="bg-red-600 hover:bg-red-700 rounded-e-full text-white rounded-s-none">
+                        className="bg-red-600 hover:bg-red-700  text-white rounded-sm text-xs">
                         Save {product.originalPrice - product.price} ৳
                      </Badge>
                   )}

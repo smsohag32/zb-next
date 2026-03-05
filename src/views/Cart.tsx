@@ -30,6 +30,7 @@ export default function CartPage() {
       return () => clearTimeout(timer);
    }, []);
 
+   const subtotal = getSubtotal();
    if (isLoading) return <CartSkeleton />;
    const shipping = storeData?.shipping?.isFreeShipping
       ? 0

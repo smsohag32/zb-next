@@ -119,7 +119,9 @@ export function Header() {
 
    return (
       <>
-         <header className="sticky top-0 z-50 w-full bg-background">
+         <header
+            className={`sticky top-0 z-50 w-full bg-background transition-transform duration-300 ${isVisible ? "translate-y-0" : "max-lg:-translate-y-full"
+               }`}>
             {/* Top bar */}
             <div className="border-b border-border/50">
                <div className="container flex h-14 items-center justify-between lg:gap-8">
@@ -322,9 +324,8 @@ export function Header() {
 
          {/* Navigation bar - Desktop */}
          <div
-            className={`hidden lg:block sticky top-14 z-40 bg-background border-b border-border/50 transition-transform duration-300 ${
-               isVisible ? "translate-y-0" : "-translate-y-full"
-            }`}>
+            className={`hidden lg:block sticky top-14 z-40 bg-background border-b border-border/50 transition-transform duration-300 ${isVisible ? "translate-y-0" : "-translate-y-full"
+               }`}>
             <div className="container flex h-12 items-center justify-between">
                <div className="flex items-center gap-1">
                   {/* Browse Collection Dropdown */}

@@ -178,9 +178,8 @@ const FloatingContact: React.FC = () => {
                onClick={toggleOpen}
                whileHover={{ scale: 1.05 }}
                whileTap={{ scale: 0.95 }}
-               className={`relative flex h-14 w-14 items-center justify-center rounded-full bg-red-600 text-white transition-all duration-500 focus:outline-none hover:bg-red-700 ${
-                  isOpen ? "rotate-180 shadow-md" : "shadow-lg"
-               }`}
+               className={`relative flex h-14 w-14 items-center justify-center rounded-full bg-red-600 text-white transition-all duration-500 focus:outline-none hover:bg-red-700 ${isOpen ? "rotate-180 shadow-md" : "shadow-lg"
+                  }`}
                aria-expanded={isOpen}
                aria-label={isOpen ? "Close contact options" : "Open contact options"}>
                <AnimatePresence mode="wait">
