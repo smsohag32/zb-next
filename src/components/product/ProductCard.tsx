@@ -96,12 +96,12 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                {/* Badges */}
                <div className="absolute top-2 left-2  z-10 flex flex-col gap-2">
                   {product.isNew && (
-                     <Badge className="bg-primary rounded-sm text-xs text-primary-foreground ">New</Badge>
+                     <Badge className="bg-primary rounded-sm text-[10px]  font-normal text-primary-foreground ">New</Badge>
                   )}
                   {product.originalPrice && product.originalPrice > product.price && (
                      <Badge
                         variant="secondary"
-                        className="bg-red-600 hover:bg-red-700  text-white rounded-sm text-xs">
+                        className="bg-red-600 hover:bg-red-700  font-normal bg-red-500  text-white rounded-sm text-[10px]">
                         Save {product.originalPrice - product.price} ৳
                      </Badge>
                   )}
