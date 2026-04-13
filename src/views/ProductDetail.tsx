@@ -494,14 +494,12 @@ export default function ProductDetailPage() {
                      <div className="flex gap-3">
                         <Button
                            size="lg"
-                           variant="outline"
-                           className="flex-[2] h-12 border-primary text-primary hover:bg-primary/5 hover:text-primary transition-all duration-300 font-semibold"
-                           onClick={handleAddToCart}
+                           variant="default"
+                           className="w-full flex-[2] h-12 bg-black/80 text-white hover:bg-black/90"
+                           onClick={handleBuyNow}
                            disabled={!canAddToCart}>
-                           <ShoppingBag className="mr-2 h-5 w-5" />
-                           Add to Cart
+                           Buy Now
                         </Button>
-                        
                         <Button
                            size="lg"
                            variant="outline"
@@ -521,14 +519,14 @@ export default function ProductDetailPage() {
                            />
                         </div>
                      </div>
-
                      <Button
                         size="lg"
-                        variant="default"
-                        className="w-full  h-12 bg-black/80 text-white hover:bg-black/90"
-                        onClick={handleBuyNow}
+                        variant="outline"
+                        className=" h-12 w-full border-primary text-primary hover:bg-primary/5 hover:text-primary transition-all duration-300 font-semibold"
+                        onClick={handleAddToCart}
                         disabled={!canAddToCart}>
-                        Buy Now
+                        <ShoppingBag className="mr-2 h-5 w-5" />
+                        Add to Cart
                      </Button>
 
                      <Accordion
