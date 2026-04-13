@@ -22,7 +22,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Helvetica', 'Arial', 'sans-serif'],
-        display: ['Roboto', 'sans-serif'],
+        display: ['var(--font-roboto)', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

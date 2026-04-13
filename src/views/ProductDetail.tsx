@@ -123,7 +123,9 @@ export default function ProductDetailPage() {
             <main className="flex-1 flex items-center justify-center">
                <div className="text-center">
                   <h1 className="text-2xl font-bold">Product not found</h1>
-                  <Button asChild className="mt-4">
+                  <Button
+                     asChild
+                     className="mt-4">
                      <Link href="/products">Back to Shop</Link>
                   </Button>
                </div>
@@ -197,7 +199,10 @@ export default function ProductDetailPage() {
       trackAddToCart(product, quantity, selectedSize, selectedColor);
       // Store buyNow item in sessionStorage for Next.js (no router state)
       if (typeof window !== "undefined") {
-         sessionStorage.setItem("buyNowItem", JSON.stringify({ product, selectedSize, selectedColor, quantity }));
+         sessionStorage.setItem(
+            "buyNowItem",
+            JSON.stringify({ product, selectedSize, selectedColor, quantity }),
+         );
       }
       router.push("/checkout");
    };
@@ -248,12 +253,15 @@ export default function ProductDetailPage() {
       metaTitle: `${capitalizeWords(product.name)} | ${capitalizeWords(product.category?.name || "Z Bazar BD")}`,
       metaDescription: cleanDescription(
          product.description ||
-         `Buy ${product.name} at best price. Fast delivery and secure checkout.`,
+            `Buy ${product.name} at best price. Fast delivery and secure checkout.`,
       ).substring(0, 160),
       metaTags: [
-         product.name, product.brand, "Z Bazar BD", "Zbazar",
-         typeof product.category === 'object' ? product.category?.name : product.category,
-         typeof product.subcategory === 'object' ? product.subcategory?.name : product.subcategory
+         product.name,
+         product.brand,
+         "Z Bazar BD",
+         "Zbazar",
+         typeof product.category === "object" ? product.category?.name : product.category,
+         typeof product.subcategory === "object" ? product.subcategory?.name : product.subcategory,
       ].filter(Boolean),
    };
 
@@ -268,12 +276,24 @@ export default function ProductDetailPage() {
          <main className="flex-1 pb-16 lg:pb-0">
             <div className="container py-6">
                <nav className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-                  <Link href="/" className="hover:text-foreground">Home</Link>
+                  <Link
+                     href="/"
+                     className="hover:text-foreground">
+                     Home
+                  </Link>
                   <span>/</span>
-                  <Link href="/products" className="hover:text-foreground">Shop</Link>
+                  <Link
+                     href="/products"
+                     className="hover:text-foreground">
+                     Shop
+                  </Link>
                   <span>/</span>
-                  <Link href={`/products?category=${typeof product.category === 'object' ? product.category?.slug : product.category}`} className="hover:text-foreground capitalize">
-                     {typeof product.category === 'object' ? product.category?.name : product.category}
+                  <Link
+                     href={`/products?category=${typeof product.category === "object" ? product.category?.slug : product.category}`}
+                     className="hover:text-foreground capitalize">
+                     {typeof product.category === "object"
+                        ? product.category?.name
+                        : product.category}
                   </Link>
                   <span>/</span>
                   <span className="text-foreground">{product.name}</span>
@@ -292,15 +312,14 @@ export default function ProductDetailPage() {
                         <div
                            className={cn(
                               "flex gap-3 overflow-x-auto pb-2 scrollbar-hide lg:grid lg:gap-4 lg:grid-cols-6 lg:overflow-visible lg:pb-0",
-                              !isMobile && (
-                                 product.images.length <= 4
+                              !isMobile &&
+                                 (product.images.length <= 4
                                     ? "grid-cols-4"
                                     : product.images.length === 5
-                                       ? "grid-cols-5"
-                                       : "grid-cols-6"
-                              )
+                                      ? "grid-cols-5"
+                                      : "grid-cols-6"),
                            )}>
-                           {product?.images?.map((image: any, index: any) => (
+                           {[...product?.images]?.slice(0, 4).map((image: any, index: any) => (
                               <button
                                  key={index}
                                  onClick={() => setSelectedImage(index)}
@@ -328,7 +347,6 @@ export default function ProductDetailPage() {
                      transition={{ duration: 0.5, delay: 0.1 }}
                      className="space-y-6">
                      <div>
-
                         <h1 className="  text-2xl font-medium lg:text-3xl">{product.name}</h1>
                         <div className="mt-3 flex items-center gap-3">
                            <div className="flex items-center gap-1">
@@ -350,39 +368,42 @@ export default function ProductDetailPage() {
                         </div>
                      </div>
 
-
-
-                     <div className="flex items-baseline  gap-3">
-                        <span className="lg:text-3xl text-2xl font-bold">{formatCurrency(product.price)}</span>
+                     <div className="flex items-baseline  pb-4 gap-3">
+                        <span className="lg:text-3xl text-2xl font-bold">
+                           {formatCurrency(product.price)}
+                        </span>
                         {product.originalPrice && (
                            <>
                               <span className="text-xl lg:text-xl text-muted-foreground line-through">
                                  {formatCurrency(product.originalPrice)}
                               </span>
-                              <Badge variant="destructive" className="hidden lg:block">
+                              <Badge
+                                 variant="destructive"
+                                 className="hidden lg:block">
                                  Save {formatCurrency(product.originalPrice - product.price)}
                               </Badge>
                            </>
                         )}
                      </div>
                      {product.originalPrice && (
-                        <Badge variant="destructive" className="lg:hidden">
+                        <Badge
+                           variant="destructive"
+                           className="lg:hidden">
                            Save {formatCurrency(product.originalPrice - product.price)}
                         </Badge>
                      )}
 
-                     <RichTextSeeMoreViewer
+                     {/* <RichTextSeeMoreViewer
                         content={product.description || ""}
 
                      />
 
-                     <Separator />
+                     <Separator /> */}
 
                      {/* Color Selection */}
                      {product.colors?.length > 0 && (
                         <div>
                            <p className="mb-3 font-medium">
-
                               Color:{" "}
                               <span className="text-muted-foreground">
                                  {selectedColor || "Select a color"}
@@ -466,7 +487,6 @@ export default function ProductDetailPage() {
                                  <Plus className="h-4 w-4" />
                               </Button>
                            </div>
-
                         </div>
                      </div>
 
@@ -481,13 +501,16 @@ export default function ProductDetailPage() {
                            <ShoppingBag className="mr-2 h-5 w-5" />
                            Add to Cart
                         </Button>
+                        
                         <Button
                            size="lg"
                            variant="outline"
                            onClick={() => toggleItem(product)}
                            className={cn(
                               "h-12 w-12 p-0 flex-shrink-0 transition-all duration-300",
-                              isWishlisted ? "text-accent border-accent" : "hover:border-primary hover:text-white"
+                              isWishlisted
+                                 ? "text-accent border-accent"
+                                 : "hover:border-primary hover:text-white",
                            )}>
                            <Heart className={cn("h-5 w-5", isWishlisted && "fill-current")} />
                         </Button>
@@ -517,9 +540,19 @@ export default function ProductDetailPage() {
                            <AccordionContent>
                               <ul className="space-y-2 text-sm text-muted-foreground">
                                  <li>Brand: {product.brand || "-"}</li>
-                                 <li>Category: {typeof product.category === 'object' ? product.category?.name : product.category}</li>
+                                 <li>
+                                    Category:{" "}
+                                    {typeof product.category === "object"
+                                       ? product.category?.name
+                                       : product.category}
+                                 </li>
                                  {product?.subcategory && (
-                                    <li>Type: {typeof product.subcategory === 'object' ? product.subcategory?.name : product.subcategory}</li>
+                                    <li>
+                                       Type:{" "}
+                                       {typeof product.subcategory === "object"
+                                          ? product.subcategory?.name
+                                          : product.subcategory}
+                                    </li>
                                  )}
                                  <li>SKU: {product?.sku}</li>
                               </ul>
@@ -539,9 +572,7 @@ export default function ProductDetailPage() {
                      <TabsContent
                         value="description"
                         className="mt-6">
-                        <RichTextViewer
-                           content={product.description || ""}
-                        />
+                        <RichTextViewer content={product.description || ""} />
                      </TabsContent>
                      <TabsContent
                         value="details"
@@ -554,7 +585,9 @@ export default function ProductDetailPage() {
                            <div>
                               <dt className="font-medium">Category</dt>
                               <dd className="text-muted-foreground capitalize">
-                                 {typeof product.category === 'object' ? product.category?.name : product.category}
+                                 {typeof product.category === "object"
+                                    ? product.category?.name
+                                    : product.category}
                               </dd>
                            </div>
                            <div>
@@ -703,10 +736,7 @@ export default function ProductDetailPage() {
                                        <Button
                                           asChild
                                           className="w-full max-w-[200px] mt-2">
-                                          <Link
-                                             href="/login">
-                                             Log In Now
-                                          </Link>
+                                          <Link href="/login">Log In Now</Link>
                                        </Button>
                                     </div>
                                  </Card>

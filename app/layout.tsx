@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Roboto } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -53,16 +54,24 @@ export const viewport = {
     themeColor: "#000000",
 };
 
+const roboto = Roboto({
+    weight: ["100", "300", "400", "500", "700", "900"],
+    style: ["normal", "italic"],
+    subsets: ["latin"],
+    display: "swap",
+    variable: "--font-roboto",
+});
+
 export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html lang="en" suppressHydrationWarning className={`${roboto.variable}`}>
             <head>
                 {/* Google Tag Manager */}
-                <Script id="gtm-script" strategy="afterInteractive">
+                <Script id="gtm-script" strategy="lazyOnload">
                     {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
