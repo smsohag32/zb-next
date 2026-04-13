@@ -33,6 +33,8 @@ jobs:
           cp -r public .next/standalone/
           # Copy static files to standalone/.next/
           cp -r .next/static .next/standalone/.next/
+          # Remove .gitignore so FTP-Deploy-Action doesn't skip the .next folder
+          rm -f .gitignore
 
       - name: Deploy via FTP
         # Documentation: https://github.com/SamKirkland/FTP-Deploy-Action
