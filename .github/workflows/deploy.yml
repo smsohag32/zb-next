@@ -1,11 +1,11 @@
-# GitHub Actions CI/CD for Namecheap Shared Hosting (Node.js App)
+# GitHub Actions CI/CD for Namecheap Shared Hosting (Node.js Standalone App)
 
 name: Deploy to Namecheap
 
 on:
   push:
     branches:
-      - main # Change to your branch name if different
+      - main
 
 jobs:
   build-and-deploy:
@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Match your local Node.js version
+          node-version: '20'
           cache: 'npm'
 
       - name: Install Dependencies
@@ -27,24 +27,31 @@ jobs:
       - name: Build Project
         run: npm run build
 
-      - name: Prepare Standalone Bundle
+      - name: Prepare Deploy Bundle
         run: |
-          # Copy public folder to standalone
-          cp -r public .next/standalone/
-          # Copy static files to standalone/.next/
-          cp -r .next/static .next/standalone/.next/
-          # Remove .gitignore so FTP-Deploy-Action doesn't skip the .next folder
-          rm -f .gitignore
+          # Build final deploy directory
+          mkdir -p deploy
 
-      - name: Deploy via FTP
-        # Documentation: https://github.com/SamKirkland/FTP-Deploy-Action
+          # 1. Copy standalone server files (server.js, node_modules, package.json)
+          cp -r .next/standalone/. deploy/
+
+          # 2. Copy public folder into deploy root (for /public/* files)
+          cp -r public/. deploy/public/
+
+          # 3. CRITICAL: Copy static assets into deploy/_next/static/
+          # This makes Apache serve CSS/JS directly at /_next/static/ URL
+          mkdir -p deploy/_next
+          cp -r .next/static deploy/_next/static
+
+      - name: Deploy Server Files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          # IMPORTANT: Add these secrets in GitHub Settings > Secrets and variables > Actions
           server: ${{ secrets.SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ${{ secrets.FTP_PROTOCOL || 'ftp' }} # Defaults to 'ftp' if secret is missing
-          local-dir: .next/standalone/
-          state-name: .next-ftp-deploy-state.json
-        
+          protocol: ${{ secrets.FTP_PROTOCOL || 'ftp' }}
+          local-dir: ./deploy/
+          exclude: |
+            **/.git*
+            **/.git*/**
+          state-name: .ftp-deploy-state.json
