@@ -1,57 +1,47 @@
-# GitHub Actions CI/CD for Namecheap Shared Hosting (Node.js Standalone App)
+# GitHub Actions CI/CD for Namecheap Shared Hosting (Node.js App)
 
 name: Deploy to Namecheap
 
 on:
-  push:
-    branches:
-      - main
+   push:
+      branches:
+         - main # Change to your branch name if different
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+   build-and-deploy:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      steps:
+         - name: Checkout Code
+           uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+         - name: Setup Node.js
+           uses: actions/setup-node@v4
+           with:
+              node-version: "20" # Match your local Node.js version
+              cache: "npm"
 
-      - name: Install Dependencies
-        run: npm ci
+         - name: Install Dependencies
+           run: npm ci
 
-      - name: Build Project
-        run: npm run build
+         - name: Build Project
+           run: npm run build
 
-      - name: Prepare Deploy Bundle
-        run: |
-          # Build final deploy directory
-          mkdir -p deploy
+         - name: Prepare Standalone Bundle
+           run: |
+              # Copy public folder to standalone
+              cp -r public .next/standalone/
+              # Copy static files to standalone/.next/
+              cp -r .next/static .next/standalone/.next/
 
-          # 1. Copy standalone server files (server.js, node_modules, package.json)
-          cp -r .next/standalone/. deploy/
-
-          # 2. Copy public folder into deploy root (for /public/* files)
-          cp -r public/. deploy/public/
-
-          # 3. CRITICAL: Copy static assets into deploy/_next/static/
-          # This makes Apache serve CSS/JS directly at /_next/static/ URL
-          mkdir -p deploy/_next
-          cp -r .next/static deploy/_next/static
-
-      - name: Deploy Server Files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ${{ secrets.FTP_PROTOCOL || 'ftp' }}
-          local-dir: ./deploy/
-          exclude: |
-            **/.git*
-            **/.git*/**
-          state-name: .ftp-deploy-state.json
+         - name: Deploy via FTP
+           # Documentation: https://github.com/SamKirkland/FTP-Deploy-Action
+           uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+           with:
+              # IMPORTANT: Add these secrets in GitHub Settings > Secrets and variables > Actions
+              server: ${{ secrets.SERVER }}
+              username: ${{ secrets.FTP_USERNAME }}
+              password: ${{ secrets.FTP_PASSWORD }}
+              protocol: ${{ secrets.FTP_PROTOCOL || 'ftp' }} # Defaults to 'ftp' if secret is missing
+              local-dir: .next/standalone/
+              state-name: .next-ftp-deploy-state.json
