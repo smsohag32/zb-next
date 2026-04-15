@@ -23,7 +23,9 @@ import { cn } from "@/lib/utils";
 import { getImageUrl } from "@/lib/getImage";
 import { formatCurrency } from "@/lib/formatters";
 import { useCreateOrderMutation } from "@/redux-store/apis_action/order";
+import { useDetectLocationMutation } from "@/redux-store/apis_action/location";
 import { useAuth } from "@/hook/useAuth";
+import CheckoutSuggestions from "@/components/checkout/CheckoutSuggestions";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux-store";
 import { trackBeginCheckout, trackPurchase } from "@/lib/analytics";
@@ -86,9 +88,11 @@ export default function Checkout() {
    const [shippingMethod, setShippingMethod] = useState("inside-dhaka");
    const [paymentMethod, setPaymentMethod] = useState("cod");
    const [errors, setErrors] = useState<FormErrors>({});
+   const [selectedSuggestions, setSelectedSuggestions] = useState<any[]>([]);
    const [isSubmitting, setIsSubmitting] = useState(false);
 
    const [createOrder] = useCreateOrderMutation();
+   const [detectLocation, { isLoading: isDetecting }] = useDetectLocationMutation();
    const { storeData } = useSelector((state: RootState) => state.store);
 
    const shippingConfig = storeData?.shipping || {
@@ -108,7 +112,11 @@ export default function Checkout() {
       const hasSizes = (buyNowItem.product.sizes?.length || 0) > 0;
       const hasColors = (buyNowItem.product.colors?.length || 0) > 0;
       if (hasSizes && hasColors) {
-         return !!buyNowSelectedSize && !!buyNowSelectedColor && (buyNowSelectedSizeObj?.quantity || 0) >= buyNowQuantity;
+         return (
+            !!buyNowSelectedSize &&
+            !!buyNowSelectedColor &&
+            (buyNowSelectedSizeObj?.quantity || 0) >= buyNowQuantity
+         );
       }
       if (hasSizes && !hasColors) {
          return !!buyNowSelectedSize && (buyNowSelectedSizeObj?.quantity || 0) >= buyNowQuantity;
@@ -134,8 +142,14 @@ export default function Checkout() {
       },
    ].filter((o) => o.enabled);
 
-   const subtotal = buyNowItem ? buyNowItem.product.price * buyNowQuantity : getSubtotal();
-   const shippingOption = SHIPPING_OPTIONS.find((s) => s.id === shippingMethod) || SHIPPING_OPTIONS[0];
+   const suggestionsSubtotal = useMemo(() => {
+      return selectedSuggestions.reduce((sum, item) => sum + item.product.price * item.qty, 0);
+   }, [selectedSuggestions]);
+
+   const subtotal =
+      (buyNowItem ? buyNowItem.product.price * buyNowQuantity : getSubtotal()) + suggestionsSubtotal;
+   const shippingOption =
+      SHIPPING_OPTIONS.find((s) => s.id === shippingMethod) || SHIPPING_OPTIONS[0];
    const shippingCost = shippingOption?.price ?? 0;
    const grandTotal = subtotal + shippingCost;
 
@@ -161,9 +175,27 @@ export default function Checkout() {
       }
    };
 
+   const handleAddressBlur = async () => {
+      if (!customerInfo.address.trim() || isDetecting) return;
+      try {
+         const res = await detectLocation(customerInfo.address).unwrap();
+         if (res?.data?.shippingType === "Inside Dhaka") {
+            setShippingMethod("inside-dhaka");
+         } else {
+            setShippingMethod("outside-dhaka");
+         }
+      } catch (err) {
+         console.error("Location detection failed:", err);
+      }
+   };
+
    const validate = (): boolean => {
       if (buyNowItem && !canProceedBuyNow) {
-         toast({ title: "Selection Required", description: "Please select required size and color with available stock.", variant: "destructive" });
+         toast({
+            title: "Selection Required",
+            description: "Please select required size and color with available stock.",
+            variant: "destructive",
+         });
          return false;
       }
       const newErrors: FormErrors = {};
@@ -178,7 +210,10 @@ export default function Checkout() {
       const errorKeys = Object.keys(newErrors);
       if (errorKeys.length > 0) {
          const el = document.getElementById(errorKeys[0]);
-         if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.focus({ preventScroll: true }); }
+         if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            el.focus({ preventScroll: true });
+         }
          return false;
       }
       return true;
@@ -190,13 +225,23 @@ export default function Checkout() {
       try {
          const [firstName, ...lastNameParts] = customerInfo.fullName.trim().split(" ");
          const lastName = lastNameParts.join(" ") || "";
-         const orderData = {
-            items: items.map((item) => ({
+         const allOrderItems = [
+            ...items.map((item) => ({
                productId: item.product.id,
                quantity: item.quantity,
                size: item.size,
                color: item.color,
             })),
+            ...selectedSuggestions.map((item) => ({
+               productId: item.product.id,
+               quantity: item.qty,
+               size: item.size,
+               color: item.color,
+            }))
+         ];
+
+         const orderData = {
+            items: allOrderItems,
             shippingAddress: {
                firstName,
                lastName,
@@ -220,10 +265,16 @@ export default function Checkout() {
          const res = await createOrder(orderData).unwrap();
          trackPurchase(res?.order ?? {}, items, grandTotal, shippingCost);
          if (!buyNowItem) clearCart();
-         toast({ title: "Order placed successfully!", description: `Thank you for your purchase. Total Cost: ${formatCurrency(grandTotal)}` });
+         toast({
+            title: "Order placed successfully!",
+            description: `Thank you for your purchase. Total Cost: ${formatCurrency(grandTotal)}`,
+         });
          router.push(`/order/details/${res?.order?.orderNumber}`);
       } catch {
-         toast({ title: "Order placement failed!", description: "There was an issue placing your order. Please try again." });
+         toast({
+            title: "Order placement failed!",
+            description: "There was an issue placing your order. Please try again.",
+         });
       } finally {
          setIsSubmitting(false);
       }
@@ -250,9 +301,13 @@ export default function Checkout() {
          disabled={isSubmitting}
          className="w-full h-12 text-base gap-2 bg-green-600 hover:bg-green-700">
          {isSubmitting ? (
-            <><span className="animate-spin">●</span> Processing...</>
+            <>
+               <span className="animate-spin">●</span> Processing...
+            </>
          ) : (
-            <><Check className="h-5 w-5" /> Confirm Order</>
+            <>
+               <Check className="h-5 w-5" /> Confirm Order
+            </>
          )}
       </Button>
    );
@@ -261,12 +316,9 @@ export default function Checkout() {
       <div className="flex min-h-screen flex-col bg-background">
          <main className="flex-1 pb-16 lg:pb-0">
             <div className="container py-6 lg:py-8">
-              
-
                <div className="grid gap-8 lg:grid-cols-3">
                   {/* ── Left: Form Sections ── */}
                   <div className="lg:col-span-2 space-y-6">
-
                      {/* Buy Now Product Customization */}
                      {buyNowItem && (
                         <div className="rounded-xl border bg-card p-6">
@@ -277,32 +329,52 @@ export default function Checkout() {
                            <div className="space-y-6">
                               <div className="flex gap-4 p-4 rounded-lg bg-muted/30">
                                  <div className="h-24 w-24 rounded-lg bg-secondary/30 overflow-hidden shrink-0">
-                                    <img src={getImageUrl(buyNowItem.product.images[0])} alt={buyNowItem.product.name} className="h-full w-full object-cover" />
+                                    <img
+                                       src={getImageUrl(buyNowItem.product.images[0])}
+                                       alt={buyNowItem.product.name}
+                                       className="h-full w-full object-cover"
+                                    />
                                  </div>
                                  <div className="flex-1">
-                                    <h3 className="font-semibold text-lg mb-1">{buyNowItem.product.name}</h3>
-                                    <p className="text-sm text-muted-foreground mb-2">{buyNowItem.product.brand}</p>
-                                    <p className="text-xl font-bold text-primary">{formatCurrency(buyNowItem.product.price)}</p>
+                                    <h3 className="font-semibold text-lg mb-1">
+                                       {buyNowItem.product.name}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground mb-2">
+                                       {buyNowItem.product.brand}
+                                    </p>
+                                    <p className="text-xl font-bold text-primary">
+                                       {formatCurrency(buyNowItem.product.price)}
+                                    </p>
                                  </div>
                               </div>
 
                               {buyNowItem.product.sizes?.length > 0 && (
                                  <div className="space-y-3">
-                                    <Label className="text-base font-semibold">Select Size <span className="text-destructive">*</span></Label>
+                                    <Label className="text-base font-semibold">
+                                       Select Size <span className="text-destructive">*</span>
+                                    </Label>
                                     <div className="flex flex-wrap gap-3">
                                        {buyNowItem.product.sizes.map((size: any) => {
                                           const isAvailable = (size.quantity || 0) > 0;
-                                          const isSelected = buyNowSelectedSize === (size.name || size.size);
+                                          const isSelected =
+                                             buyNowSelectedSize === (size.name || size.size);
                                           return (
                                              <button
                                                 key={size.name || size.size}
-                                                onClick={() => isAvailable && setBuyNowSelectedSize(size.name || size.size || "")}
+                                                onClick={() =>
+                                                   isAvailable &&
+                                                   setBuyNowSelectedSize(
+                                                      size.name || size.size || "",
+                                                   )
+                                                }
                                                 disabled={!isAvailable}
                                                 className={cn(
                                                    "min-w-[40px] h-10 px-3  border-2 font-semibold transition-all duration-300",
-                                                   isSelected ? "border-primary bg-primary text-primary-foreground shadow-lg scale-105"
-                                                      : isAvailable ? "border-border hover:border-primary/50 hover:bg-primary/5"
-                                                      : "border-dashed opacity-40 cursor-not-allowed line-through",
+                                                   isSelected
+                                                      ? "border-primary bg-primary text-primary-foreground shadow-lg scale-105"
+                                                      : isAvailable
+                                                        ? "border-border hover:border-primary/50 hover:bg-primary/5"
+                                                        : "border-dashed opacity-40 cursor-not-allowed line-through",
                                                 )}>
                                                 {size.name || size.size}
                                              </button>
@@ -315,16 +387,39 @@ export default function Checkout() {
                               {buyNowItem.product.colors?.length > 0 && (
                                  <div className="space-y-3">
                                     <Label className="text-base font-semibold flex items-center justify-between">
-                                       <span>Select Color <span className="text-destructive">*</span></span>
-                                       <span className="text-sm font-normal text-muted-foreground">{buyNowSelectedColor}</span>
+                                       <span>
+                                          Select Color <span className="text-destructive">*</span>
+                                       </span>
+                                       <span className="text-sm font-normal text-muted-foreground">
+                                          {buyNowSelectedColor}
+                                       </span>
                                     </Label>
                                     <div className="flex flex-wrap gap-4">
                                        {buyNowItem.product.colors.map((color: any) => {
                                           const isSelected = buyNowSelectedColor === color.color;
                                           return (
-                                             <button key={color.color} onClick={() => setBuyNowSelectedColor(color.color)} className="group flex flex-col items-center gap-2">
-                                                <div className={cn("h-8 w-8 rounded-full border shadow-sm transition-all duration-300", isSelected ? "ring-2 ring-primary ring-offset-2 scale-110" : "hover:scale-110 hover:shadow-md")} style={{ backgroundColor: color.hex }} />
-                                                <span className={cn("text-[10px] uppercase tracking-wider font-bold", isSelected ? "text-primary" : "text-muted-foreground group-hover:text-foreground")}>{color.color}</span>
+                                             <button
+                                                key={color.color}
+                                                onClick={() => setBuyNowSelectedColor(color.color)}
+                                                className="group flex flex-col items-center gap-2">
+                                                <div
+                                                   className={cn(
+                                                      "h-8 w-8 rounded-full border shadow-sm transition-all duration-300",
+                                                      isSelected
+                                                         ? "ring-2 ring-primary ring-offset-2 scale-110"
+                                                         : "hover:scale-110 hover:shadow-md",
+                                                   )}
+                                                   style={{ backgroundColor: color.hex }}
+                                                />
+                                                <span
+                                                   className={cn(
+                                                      "text-[10px] uppercase tracking-wider font-bold",
+                                                      isSelected
+                                                         ? "text-primary"
+                                                         : "text-muted-foreground group-hover:text-foreground",
+                                                   )}>
+                                                   {color.color}
+                                                </span>
                                              </button>
                                           );
                                        })}
@@ -333,15 +428,33 @@ export default function Checkout() {
                               )}
 
                               <div className="space-y-3">
-                                 <Label className="text-base font-semibold">Quantity <span className="text-destructive">*</span></Label>
+                                 <Label className="text-base font-semibold">
+                                    Quantity <span className="text-destructive">*</span>
+                                 </Label>
                                  <div className="flex items-center border rounded-md h-10 w-fit">
-                                    <Button variant="ghost" size="icon" onClick={() => setBuyNowQuantity(Math.max(1, buyNowQuantity - 1))} disabled={buyNowQuantity <= 1}>
+                                    <Button
+                                       variant="ghost"
+                                       size="icon"
+                                       onClick={() =>
+                                          setBuyNowQuantity(Math.max(1, buyNowQuantity - 1))
+                                       }
+                                       disabled={buyNowQuantity <= 1}>
                                        <Minus className="h-4 w-4" />
                                     </Button>
-                                    <span className="w-12 text-center font-medium">{buyNowQuantity}</span>
-                                    <Button variant="ghost" size="icon"
-                                       onClick={() => { const max = buyNowSelectedSizeObj?.quantity || Infinity; setBuyNowQuantity(Math.min(buyNowQuantity + 1, max)); }}
-                                       disabled={buyNowQuantity >= (buyNowSelectedSizeObj?.quantity || Infinity)}>
+                                    <span className="w-12 text-center font-medium">
+                                       {buyNowQuantity}
+                                    </span>
+                                    <Button
+                                       variant="ghost"
+                                       size="icon"
+                                       onClick={() => {
+                                          const max = buyNowSelectedSizeObj?.quantity || Infinity;
+                                          setBuyNowQuantity(Math.min(buyNowQuantity + 1, max));
+                                       }}
+                                       disabled={
+                                          buyNowQuantity >=
+                                          (buyNowSelectedSizeObj?.quantity || Infinity)
+                                       }>
                                        <Plus className="h-4 w-4" />
                                     </Button>
                                  </div>
@@ -358,19 +471,59 @@ export default function Checkout() {
                         </h2>
                         <div className="grid gap-5">
                            <div className="space-y-2">
-                              <Label htmlFor="fullName">Full Name <span className="text-destructive">*</span></Label>
-                              <Input id="fullName" placeholder="Enter your full name" value={customerInfo.fullName} onChange={(e) => handleInputChange("fullName", e.target.value)} className={cn(errors.fullName && "border-destructive")} />
-                              {errors.fullName && <p className="text-sm text-destructive">{errors.fullName}</p>}
+                              <Label htmlFor="fullName">
+                                 Full Name <span className="text-destructive">*</span>
+                              </Label>
+                              <Input
+                                 id="fullName"
+                                 placeholder="Enter your full name"
+                                 value={customerInfo.fullName}
+                                 onChange={(e) => handleInputChange("fullName", e.target.value)}
+                                 className={cn(errors.fullName && "border-destructive")}
+                              />
+                              {errors.fullName && (
+                                 <p className="text-sm text-destructive">{errors.fullName}</p>
+                              )}
                            </div>
                            <div className="space-y-2">
-                              <Label htmlFor="phone">Phone Number <span className="text-destructive">*</span></Label>
-                              <Input id="phone" placeholder="01XXXXXXXXX" value={customerInfo.phone} onChange={(e) => handleInputChange("phone", e.target.value)} className={cn(errors.phone && "border-destructive")} />
-                              {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
+                              <Label htmlFor="phone">
+                                 Phone Number <span className="text-destructive">*</span>
+                              </Label>
+                              <Input
+                                 id="phone"
+                                 placeholder="01XXXXXXXXX"
+                                 value={customerInfo.phone}
+                                 onChange={(e) => handleInputChange("phone", e.target.value)}
+                                 className={cn(errors.phone && "border-destructive")}
+                              />
+                              {errors.phone && (
+                                 <p className="text-sm text-destructive">{errors.phone}</p>
+                              )}
                            </div>
                            <div className="space-y-2">
-                              <Label htmlFor="address">Full Address <span className="text-destructive">*</span></Label>
-                              <Input id="address" placeholder="House/Flat, Road, Block, Sector" value={customerInfo.address} onChange={(e) => handleInputChange("address", e.target.value)} className={cn(errors.address && "border-destructive")} />
-                              {errors.address && <p className="text-sm text-destructive">{errors.address}</p>}
+                              <Label htmlFor="address">
+                                 Full Address <span className="text-destructive">*</span>
+                              </Label>
+                              <Input
+                                 id="address"
+                                 placeholder="House/Flat, Road, Block, Sector"
+                                 value={customerInfo.address}
+                                 onChange={(e) => handleInputChange("address", e.target.value)}
+                                 onBlur={handleAddressBlur}
+                                 className={cn(
+                                    errors.address && "border-destructive",
+                                    isDetecting && "opacity-50",
+                                 )}
+                                 disabled={isDetecting}
+                              />
+                              {isDetecting && (
+                                 <p className="text-xs text-muted-foreground animate-pulse">
+                                    Analyzing location...
+                                 </p>
+                              )}
+                              {errors.address && (
+                                 <p className="text-sm text-destructive">{errors.address}</p>
+                              )}
                            </div>
                         </div>
                      </div>
@@ -380,20 +533,33 @@ export default function Checkout() {
                         <div className="rounded-xl border bg-card p-6">
                            <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                               <Truck className="h-5 w-5 text-primary" />
-                              Shipping Method
+                              Shipping
                            </h2>
-                           <RadioGroup value={shippingMethod} onValueChange={setShippingMethod}>
+                           <RadioGroup
+                              value={shippingMethod}
+                              onValueChange={setShippingMethod}>
                               <div className="space-y-3">
                                  {SHIPPING_OPTIONS.map((option) => (
-                                    <label key={option.id} className={cn("flex items-center justify-between rounded-lg border p-4 cursor-pointer transition-all", shippingMethod === option.id ? "border-primary bg-primary/5" : "hover:border-primary/50")}>
+                                    <label
+                                       key={option.id}
+                                       className={cn(
+                                          "flex items-center justify-between rounded-lg border p-4 cursor-pointer transition-all",
+                                          shippingMethod === option.id
+                                             ? "border-primary bg-primary/5"
+                                             : "hover:border-primary/50",
+                                       )}>
                                        <div className="flex items-center gap-3">
-                                          <RadioGroupItem value={option.id} id={option.id} />
+                                          <RadioGroupItem
+                                             value={option.id}
+                                             id={option.id}
+                                          />
                                           <div>
                                              <p className="font-medium">{option.label}</p>
-                                             <p className="text-sm text-muted-foreground">{option.description}</p>
                                           </div>
                                        </div>
-                                       <span className="text-lg font-semibold text-primary">{option.price === 0 ? "Free" : `৳${option.price}`}</span>
+                                       <span className="text-lg font-semibold text-primary">
+                                          {option.price === 0 ? "Free" : `৳${option.price}`}
+                                       </span>
                                     </label>
                                  ))}
                               </div>
@@ -407,15 +573,27 @@ export default function Checkout() {
                            <CreditCard className="h-5 w-5 text-primary" />
                            Payment Method
                         </h2>
-                        <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-                           <label className={cn("flex items-center gap-4 rounded-lg border p-4 cursor-pointer transition-all", paymentMethod === "cod" ? "border-primary bg-primary/5" : "hover:border-primary/50")}>
-                              <RadioGroupItem value="cod" id="cod" />
+                        <RadioGroup
+                           value={paymentMethod}
+                           onValueChange={setPaymentMethod}>
+                           <label
+                              className={cn(
+                                 "flex items-center gap-4 rounded-lg border p-4 cursor-pointer transition-all",
+                                 paymentMethod === "cod"
+                                    ? "border-primary bg-primary/5"
+                                    : "hover:border-primary/50",
+                              )}>
+                              <RadioGroupItem
+                                 value="cod"
+                                 id="cod"
+                              />
                               <div className="flex-1">
                                  <div className="flex items-center gap-2">
                                     <p className="font-medium">Cash on Delivery</p>
-                                    <span className="rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">Recommended</span>
+                                    <span className="rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                                       Recommended
+                                    </span>
                                  </div>
-                                 <p className="text-sm text-muted-foreground mt-1">Pay with cash when your order is delivered to your doorstep</p>
                               </div>
                            </label>
                         </RadioGroup>
@@ -425,6 +603,12 @@ export default function Checkout() {
                      <div className="hidden lg:block">
                         <ConfirmButton />
                      </div>
+
+                     {/* Suggested Products */}
+                     <CheckoutSuggestions 
+                        cartItems={items} 
+                        onSelectionChange={setSelectedSuggestions}
+                     />
                   </div>
 
                   {/* ── Right: Order Summary ── */}
@@ -434,16 +618,57 @@ export default function Checkout() {
 
                         <div className="space-y-3 pt-2 mb-4 max-h-52 overflow-y-auto">
                            {items.map((item: any, index: any) => (
-                              <div key={`sidebar-${item.product.id}-${item.size}-${item.color}-${index}`} className="flex items-center gap-3">
+                              <div
+                                 key={`sidebar-${item.product.id}-${item.size}-${item.color}-${index}`}
+                                 className="flex items-center gap-3">
                                  <div className="relative h-12 w-12 rounded-lg bg-secondary/30 shrink-0">
-                                    <img src={getImageUrl(item.product.images[0])} alt={item.product.name} className="h-full w-full rounded-lg object-cover" />
-                                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">{item.quantity}</span>
+                                    <img
+                                       src={getImageUrl(item.product.images[0])}
+                                       alt={item.product.name}
+                                       className="h-full w-full rounded-lg object-cover"
+                                    />
+                                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
+                                       {item.quantity}
+                                    </span>
                                  </div>
                                  <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium line-clamp-1">{item.product.name}</p>
+                                    <p className="text-sm font-medium line-clamp-1">
+                                       {item.product.name}
+                                    </p>
                                     <p className="text-xs text-muted-foreground">{item.size}</p>
                                  </div>
-                                 <p className="text-sm font-medium shrink-0">{formatCurrency(item.product.price * item.quantity)}</p>
+                                 <p className="text-sm font-medium shrink-0">
+                                    {formatCurrency(item.product.price * item.quantity)}
+                                 </p>
+                              </div>
+                           ))}
+
+                           {/* Selected Suggestions in Summary */}
+                           {selectedSuggestions.map((item: any, index: any) => (
+                              <div
+                                 key={`suggest-sidebar-${item.product.id}-${item.size}-${item.color}-${index}`}
+                                 className="flex items-center gap-3 border-l-2 border-primary/30 pl-3 py-1">
+                                 <div className="relative h-12 w-12 rounded-lg bg-secondary/30 shrink-0">
+                                    <img
+                                       src={getImageUrl(item.product.images[0])}
+                                       alt={item.product.name}
+                                       className="h-full w-full rounded-lg object-cover"
+                                    />
+                                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
+                                       {item.qty}
+                                    </span>
+                                 </div>
+                                 <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium line-clamp-1 italic text-primary">
+                                       {item.product.name}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                       {item.size} / {item.color}
+                                    </p>
+                                 </div>
+                                 <p className="text-sm font-medium shrink-0">
+                                    {formatCurrency(item.product.price * item.qty)}
+                                 </p>
                               </div>
                            ))}
                         </div>
@@ -457,7 +682,9 @@ export default function Checkout() {
                            </div>
                            <div className="flex justify-between text-sm">
                               <span className="text-muted-foreground">Shipping</span>
-                              <span>{shippingCost === 0 ? "Free" : formatCurrency(shippingCost)}</span>
+                              <span>
+                                 {shippingCost === 0 ? "Free" : formatCurrency(shippingCost)}
+                              </span>
                            </div>
                            <Separator />
                            <div className="flex justify-between text-lg font-semibold">

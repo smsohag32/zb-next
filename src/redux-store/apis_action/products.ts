@@ -56,6 +56,27 @@ const productApi = apiSlice.injectEndpoints({
          }),
          providesTags: ["product"],
       }),
+
+      getCheckoutSuggestions: builder.query({
+         query: ({
+            tags,
+            excludeIds,
+            limit = 8,
+         }: {
+            tags: string[];
+            excludeIds?: (string | number)[];
+            limit?: number;
+         }) => ({
+            url: `/products/suggestions`,
+            method: "GET",
+            params: {
+               tags: tags.join(","),
+               excludeIds: excludeIds?.join(","),
+               limit,
+            },
+         }),
+         providesTags: ["product"],
+      }),
    }),
 });
 
@@ -64,4 +85,5 @@ export const {
    useGetProductByIdQuery,
    useGetRelatedProductsQuery,
    useGetProductBySlugQuery,
+   useGetCheckoutSuggestionsQuery,
 } = productApi;
