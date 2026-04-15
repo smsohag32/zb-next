@@ -244,7 +244,7 @@ export default function CheckoutSuggestions({
       { skip: allTags.length === 0 },
    );
 
-   const suggestions: any[] = data?.data ?? [];
+   const suggestions = useMemo(() => data?.data ?? [], [data?.data]);
 
    // Track which products are checked + their selections
    const [checked, setChecked] = useState<Record<number, boolean>>({});
