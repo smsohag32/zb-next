@@ -244,7 +244,7 @@ export default function CheckoutSuggestions({
       { skip: allTags.length === 0 },
    );
 
-   const suggestions = useMemo(() => data?.data ?? [], [data?.data]);
+   const suggestions: any[] = useMemo(() => data?.data ?? [], [data?.data]);
 
    // Track which products are checked + their selections
    const [checked, setChecked] = useState<Record<number, boolean>>({});
@@ -361,7 +361,7 @@ export default function CheckoutSuggestions({
          <div className="p-2.5 space-y-2">
             {isLoading || isFetching
                ? Array.from({ length: 3 }).map((_, i) => <SkeletonRow key={i} />)
-               : suggestions.map((product) => (
+               : suggestions.map((product: any) => (
                     <ProductRow
                        key={product.id}
                        product={product}
