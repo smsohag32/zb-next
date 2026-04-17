@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -7,12 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux-store";
+import type { AppDispatch } from "@/redux-store";
 import { toast } from "sonner";
 import { loginUser } from "@/redux-store/slices/authSlice";
-import { Seo } from "@/seo/Seo";
 import Logo from "@/assets/Logo";
+import Image from "next/image";
 import loginSneaker from "@/assets/login-sneaker.png";
+import type { Metadata } from "next";
 
 export default function LoginPage() {
    const [showPassword, setShowPassword] = useState(false);
@@ -27,32 +30,18 @@ export default function LoginPage() {
       setIsLoading(true);
       try {
          const res = await dispatch(loginUser({ email, password })).unwrap();
-
-         if (res.status !== 200) {
-            throw new Error(res.message || "Login failed");
-         }
-
-         (toast as any).success("Login successful!");
+         if (res.status !== 200) throw new Error(res.message || "Login failed");
+         toast.success("Login successful!");
          router.replace("/dashboard");
       } catch (error: any) {
-         (toast as any).error(error?.message || "Login failed");
+         toast.error(error?.message || "Login failed");
       } finally {
          setIsLoading(false);
       }
    };
 
    return (
-      <div className="min-h-screen flex">
-         {/* SEO */}
-         <Seo
-            storeData={{
-               metaTitle: "Login | ZBazar BD",
-               metaDescription:
-                  "Sign in to your ZBazar BD account to access your dashboard, orders, and exclusive deals.",
-               metaTags: ["login", "account", "signin", "ZBazar BD"],
-            }}
-         />
-
+      <div className=" py-8 flex w-full">
          {/* Left side - Form */}
          <div className="flex-1 flex flex-col py-8 justify-center px-8 lg:px-16">
             <div className="max-w-md mx-auto w-full">
@@ -76,7 +65,6 @@ export default function LoginPage() {
                            required
                         />
                      </div>
-
                      <div className="space-y-2">
                         <div className="flex items-center justify-between">
                            <Label htmlFor="password">Password</Label>
@@ -107,7 +95,6 @@ export default function LoginPage() {
                            </button>
                         </div>
                      </div>
-
                      <Button
                         type="submit"
                         size="lg"
@@ -118,7 +105,7 @@ export default function LoginPage() {
                   </form>
 
                   <p className="mt-8 text-center text-sm text-muted-foreground">
-                     Don't have an account?{" "}
+                     Don&apos;t have an account?{" "}
                      <Link
                         href="/register"
                         className="text-primary hover:underline">
@@ -130,15 +117,19 @@ export default function LoginPage() {
          </div>
 
          {/* Right side - Image */}
-         <div className="hidden lg:flex lg:flex-1 relative items-center justify-center overflow-hidden">
-            <motion.img
-               src={loginSneaker.src}
-               alt="Professional Sneaker"
-               className="w-4/5 h-4/5 object-contain"
+         <div className="hidden lg:flex lg:flex-1 relative  items-center justify-center overflow-hidden">
+            <motion.div
+               className="w-4/5 h-4/5 relative"
                initial={{ scale: 0.8, opacity: 0 }}
                animate={{ scale: 1, opacity: 1 }}
-               transition={{ duration: 0.8, ease: "easeOut" }}
-            />
+               transition={{ duration: 0.8, ease: "easeOut" }}>
+               <Image
+                  src={loginSneaker}
+                  alt="Shop at ZBazar"
+                  className="object-contain"
+                  fill
+               />
+            </motion.div>
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background/20 to-transparent pointer-events-none" />
          </div>
       </div>

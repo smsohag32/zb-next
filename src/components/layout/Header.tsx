@@ -120,8 +120,9 @@ export function Header() {
    return (
       <>
          <header
-            className={`sticky top-0 z-50 w-full bg-background transition-transform duration-300 ${isVisible ? "translate-y-0" : "max-lg:-translate-y-full"
-               }`}>
+            className={`sticky top-0 z-50 w-full bg-background transition-transform duration-300 ${
+               isVisible ? "translate-y-0" : "max-lg:-translate-y-full"
+            }`}>
             {/* Top bar */}
             <div className="border-b border-border/50">
                <div className="container flex h-14 items-center justify-between lg:gap-8">
@@ -231,7 +232,7 @@ export function Header() {
                         size="icon"
                         onClick={toggleTheme}
                         aria-label="Toggle Theme"
-                        className="flex hover:bg-transparent md:hover:bg-secondary">
+                        className="flex hover:bg-transparent md:hover:bg-transparent text-foreground   hover:text-accent">
                         {theme === "light" ? (
                            <Moon className="h-5 w-5" />
                         ) : (
@@ -244,7 +245,7 @@ export function Header() {
                            variant="ghost"
                            size="icon"
                            aria-label="Wishlist"
-                           className="relative hidden sm:flex">
+                           className="relative hidden hover:bg-transparent md:hover:bg-transparent text-foreground   hover:text-accent sm:flex">
                            <Heart className="h-5 w-5" />
                            {wishlistItems.length > 0 && (
                               <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-xs font-medium text-primary-foreground flex items-center justify-center">
@@ -258,7 +259,7 @@ export function Header() {
                         variant="ghost"
                         size="icon"
                         aria-label="Open Cart"
-                        className="relative"
+                        className="relative hover:bg-transparent md:hover:bg-transparent text-foreground   hover:text-accent"
                         onClick={openCart}>
                         <ShoppingBag className="h-5 w-5" />
                         {cartCount > 0 && (
@@ -275,7 +276,7 @@ export function Header() {
                               variant="ghost"
                               size="icon"
                               aria-label="User Account"
-                              className="hidden sm:flex">
+                              className="hidden sm:flex hover:bg-transparent md:hover:bg-transparent text-foreground   hover:text-accent">
                               <User className="h-5 w-5" />
                            </Button>
                         </DropdownMenuTrigger>
@@ -324,8 +325,9 @@ export function Header() {
 
          {/* Navigation bar - Desktop */}
          <div
-            className={`hidden lg:block sticky top-14 z-40 bg-background border-b border-border/50 transition-transform duration-300 ${isVisible ? "translate-y-0" : "-translate-y-full"
-               }`}>
+            className={`hidden lg:block sticky top-14 z-40 bg-background border-b border-border/50 transition-transform duration-300 ${
+               isVisible ? "translate-y-0" : "-translate-y-full"
+            }`}>
             <div className="container flex h-12 items-center justify-between">
                <div className="flex items-center gap-1">
                   {/* Browse Collection Dropdown */}

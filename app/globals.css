@@ -13,7 +13,8 @@
       --popover: 0 0% 100%;
       --popover-foreground: 0 0% 5%;
 
-      --primary: 0 72% 51%;
+      /* 🔥 NEW PRIMARY (Orange) */
+      --primary: 24 100% 50%;
       --primary-foreground: 0 0% 100%;
 
       --secondary: 0 0% 96%;
@@ -22,7 +23,7 @@
       --muted: 0 0% 96%;
       --muted-foreground: 0 0% 45%;
 
-      --accent: 0 72% 51%;
+      --accent: 24 100% 50%;
       --accent-foreground: 0 0% 100%;
 
       --destructive: 0 84% 60%;
@@ -30,12 +31,13 @@
 
       --border: 0 0% 90%;
       --input: 0 0% 90%;
-      --ring: 0 72% 51%;
+      --ring: 24 100% 50%;
 
       --radius: 0.4rem;
 
       /* Custom tokens */
-      --hero-gradient: linear-gradient(135deg, hsl(0 72% 51%) 0%, hsl(0 84% 40%) 100%);
+      --hero-gradient: linear-gradient(135deg, hsl(24 100% 50%) 0%, hsl(24 100% 42%) 100%);
+
       --card-shadow: 0 4px 20px -4px hsl(0 0% 0% / 0.08);
       --card-shadow-hover: 0 12px 40px -8px hsl(0 0% 0% / 0.15);
 
@@ -46,7 +48,7 @@
       --sidebar-accent: 0 0% 96%;
       --sidebar-accent-foreground: 0 0% 10%;
       --sidebar-border: 0 0% 91%;
-      --sidebar-ring: 0 72% 51%;
+      --sidebar-ring: 24 100% 50%;
    }
 
    .dark {
@@ -59,7 +61,8 @@
       --popover: 0 0% 8%;
       --popover-foreground: 0 0% 98%;
 
-      --primary: 0 72% 55%;
+      /* Slightly brighter for dark mode */
+      --primary: 24 100% 55%;
       --primary-foreground: 0 0% 100%;
 
       --secondary: 0 0% 12%;
@@ -68,7 +71,7 @@
       --muted: 0 0% 15%;
       --muted-foreground: 0 0% 65%;
 
-      --accent: 0 72% 55%;
+      --accent: 24 100% 55%;
       --accent-foreground: 0 0% 100%;
 
       --destructive: 0 62% 50%;
@@ -76,20 +79,21 @@
 
       --border: 0 0% 18%;
       --input: 0 0% 18%;
-      --ring: 0 72% 55%;
+      --ring: 24 100% 55%;
 
-      --hero-gradient: linear-gradient(135deg, hsl(0 72% 45%) 0%, hsl(0 84% 35%) 100%);
+      --hero-gradient: linear-gradient(135deg, hsl(24 100% 45%) 0%, hsl(24 100% 35%) 100%);
+
       --card-shadow: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
       --card-shadow-hover: 0 12px 40px -8px hsl(0 0% 0% / 0.5);
 
       --sidebar-background: 0 0% 8%;
       --sidebar-foreground: 0 0% 95%;
-      --sidebar-primary: 0 72% 55%;
+      --sidebar-primary: 24 100% 55%;
       --sidebar-primary-foreground: 0 0% 100%;
       --sidebar-accent: 0 0% 15%;
       --sidebar-accent-foreground: 0 0% 95%;
       --sidebar-border: 0 0% 15%;
-      --sidebar-ring: 0 72% 55%;
+      --sidebar-ring: 24 100% 55%;
    }
 }
 
@@ -137,5 +141,3 @@
       animation: fade-in 0.4s ease-out forwards;
    }
 }
-
-/* fdl */

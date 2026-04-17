@@ -147,7 +147,8 @@ export default function Checkout() {
    }, [selectedSuggestions]);
 
    const subtotal =
-      (buyNowItem ? buyNowItem.product.price * buyNowQuantity : getSubtotal()) + suggestionsSubtotal;
+      (buyNowItem ? buyNowItem.product.price * buyNowQuantity : getSubtotal()) +
+      suggestionsSubtotal;
    const shippingOption =
       SHIPPING_OPTIONS.find((s) => s.id === shippingMethod) || SHIPPING_OPTIONS[0];
    const shippingCost = shippingOption?.price ?? 0;
@@ -175,19 +176,25 @@ export default function Checkout() {
       }
    };
 
-   const handleAddressBlur = async () => {
-      if (!customerInfo.address.trim() || isDetecting) return;
-      try {
-         const res = await detectLocation(customerInfo.address).unwrap();
-         if (res?.data?.shippingType === "Inside Dhaka") {
-            setShippingMethod("inside-dhaka");
-         } else {
-            setShippingMethod("outside-dhaka");
+   useEffect(() => {
+      const address = customerInfo.address.trim();
+      if (!address) return;
+
+      const handler = setTimeout(async () => {
+         try {
+            const res = await detectLocation(address).unwrap();
+            if (res?.data?.shippingType === "Inside Dhaka") {
+               setShippingMethod("inside-dhaka");
+            } else {
+               setShippingMethod("outside-dhaka");
+            }
+         } catch (err) {
+            console.error("Location detection failed:", err);
          }
-      } catch (err) {
-         console.error("Location detection failed:", err);
-      }
-   };
+      }, 800);
+
+      return () => clearTimeout(handler);
+   }, [customerInfo.address, detectLocation]);
 
    const validate = (): boolean => {
       if (buyNowItem && !canProceedBuyNow) {
@@ -237,7 +244,7 @@ export default function Checkout() {
                quantity: item.qty,
                size: item.size,
                color: item.color,
-            }))
+            })),
          ];
 
          const orderData = {
@@ -299,7 +306,7 @@ export default function Checkout() {
       <Button
          onClick={handleConfirmOrder}
          disabled={isSubmitting}
-         className="w-full h-12 text-base gap-2 bg-green-600 hover:bg-green-700">
+         className="w-full h-12 text-base gap-2">
          {isSubmitting ? (
             <>
                <span className="animate-spin">●</span> Processing...
@@ -509,18 +516,12 @@ export default function Checkout() {
                                  placeholder="House/Flat, Road, Block, Sector"
                                  value={customerInfo.address}
                                  onChange={(e) => handleInputChange("address", e.target.value)}
-                                 onBlur={handleAddressBlur}
                                  className={cn(
                                     errors.address && "border-destructive",
                                     isDetecting && "opacity-50",
                                  )}
-                                 disabled={isDetecting}
                               />
-                              {isDetecting && (
-                                 <p className="text-xs text-muted-foreground animate-pulse">
-                                    Analyzing location...
-                                 </p>
-                              )}
+
                               {errors.address && (
                                  <p className="text-sm text-destructive">{errors.address}</p>
                               )}
@@ -537,21 +538,22 @@ export default function Checkout() {
                            </h2>
                            <RadioGroup
                               value={shippingMethod}
-                              onValueChange={setShippingMethod}>
+                              disabled>
                               <div className="space-y-3">
                                  {SHIPPING_OPTIONS.map((option) => (
                                     <label
                                        key={option.id}
                                        className={cn(
-                                          "flex items-center justify-between rounded-lg border p-4 cursor-pointer transition-all",
+                                          "flex items-center justify-between rounded-lg border p-4 transition-all opacity-80 cursor-not-allowed",
                                           shippingMethod === option.id
                                              ? "border-primary bg-primary/5"
-                                             : "hover:border-primary/50",
+                                             : "bg-muted/30",
                                        )}>
                                        <div className="flex items-center gap-3">
                                           <RadioGroupItem
                                              value={option.id}
                                              id={option.id}
+                                             disabled
                                           />
                                           <div>
                                              <p className="font-medium">{option.label}</p>
@@ -599,14 +601,9 @@ export default function Checkout() {
                         </RadioGroup>
                      </div>
 
-                     {/* Confirm Button — Desktop only (below form) */}
-                     <div className="hidden lg:block">
-                        <ConfirmButton />
-                     </div>
-
                      {/* Suggested Products */}
-                     <CheckoutSuggestions 
-                        cartItems={items} 
+                     <CheckoutSuggestions
+                        cartItems={items}
                         onSelectionChange={setSelectedSuggestions}
                      />
                   </div>
@@ -691,13 +688,13 @@ export default function Checkout() {
                               <span>Grand Total</span>
                               <span className="text-primary">{formatCurrency(grandTotal)}</span>
                            </div>
+                           <div className="pt-8 flex justify-end">
+                              <ConfirmButton />
+                           </div>
                         </div>
                      </div>
 
-                     {/* Confirm Button — Mobile only (below summary) */}
-                     <div className="lg:hidden mt-6">
-                        <ConfirmButton />
-                     </div>
+                     {/* Confirm Button */}
                   </div>
                </div>
             </div>
