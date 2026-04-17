@@ -179,7 +179,8 @@ export function ProductListCard({ product, index = 0 }: ProductListCardProps) {
                         </Button>
                         <Button
                            size="sm"
-                           className="gap-2 bg-black hover:bg-black/90 text-white"
+                           variant="outline"
+                           className="gap-2 border-primary bg-[#ffffff] text-primary hover:bg-primary hover:text-primary-foreground"
                            onClick={handleBuyNow}
                            disabled={!product.inStock && !product.sizes?.some((s) => (s.quantity || 0) > 0)}>
                            <Zap className="h-4 w-4" />

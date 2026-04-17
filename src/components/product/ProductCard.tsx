@@ -96,7 +96,9 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                {/* Badges */}
                <div className="absolute top-2 left-2  z-10 flex flex-col gap-2">
                   {product.isNew && (
-                     <Badge className="bg-primary rounded-sm text-[10px]  font-normal text-primary-foreground ">New</Badge>
+                     <Badge className="bg-primary rounded-sm text-[10px]  font-normal text-primary-foreground ">
+                        New
+                     </Badge>
                   )}
                   {product.originalPrice && product.originalPrice > product.price && (
                      <Badge
@@ -148,7 +150,8 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                            : "Out of Stock"}
                      </Button>
                      <Button
-                        className="flex-1  bg-black/80 hover:bg-black/90"
+                        variant="outline"
+                        className="flex-1  border border-black bg-black text-white hover:bg-black/90 hover:text-white"
                         onClick={handleBuyNow}
                         disabled={
                            !product.inStock && !product.sizes?.some((s) => (s.quantity || 0) > 0)
@@ -173,8 +176,8 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                </Button>
                <Button
                   size="sm"
-                  variant={"default"}
-                  className=" flex-1  h-9 flex-1 gap-2 bg-zinc-900 !text-white hover:bg-zinc-800  rounded-none  active:scale-95 transition-all border-none "
+                  variant="outline"
+                  className="flex-1 h-9 gap-2 border-primary bg-transparent text-primary hover:bg-primary hover:text-primary-foreground rounded-none active:scale-95 transition-all"
                   onClick={handleBuyNow}
                   disabled={!product.inStock && !product.sizes?.some((s) => (s.quantity || 0) > 0)}>
                   <ShoppingCart className="h-4 w-4" />
