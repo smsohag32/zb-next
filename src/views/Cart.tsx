@@ -34,7 +34,7 @@ export default function CartPage() {
    if (isLoading) return <CartSkeleton />;
    const shipping = storeData?.shipping?.isFreeShipping
       ? 0
-      : (storeData?.shipping?.inside_dhaka?.price || 60);
+      : storeData?.shipping?.inside_dhaka?.price || 60;
    const total = subtotal + shipping;
 
    // Determine if checkout is allowed
@@ -49,7 +49,7 @@ export default function CartPage() {
 
       return sizeValid && colorValid;
    });
-   const storeName = storeData?.name || "ZBazar BD";
+   const storeName = storeData?.name || "ZBazar";
 
    if (items.length === 0) {
       return (
@@ -92,8 +92,7 @@ export default function CartPage() {
                            key={`${item.product.id}-${item.size}-${item.color}`}
                            initial={{ opacity: 0, y: 20 }}
                            animate={{ opacity: 1, y: 0 }}
-                           transition={{ delay: index * 0.1 }}
-                        >
+                           transition={{ delay: index * 0.1 }}>
                            <CartItem
                               item={item}
                               updateQuantity={updateQuantity}

@@ -8,6 +8,7 @@ import type { RootState } from "@/redux-store";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import Image from "next/image";
 import logo from "@/assets/logo2.png";
+import Logo from "@/assets/Logo";
 
 const footerLinks = {
    support: [
@@ -29,15 +30,7 @@ export function Footer() {
             <div className="grid gap-8 lg:grid-cols-4">
                {/* Brand */}
                <div className="lg:col-span-2">
-                  <Link
-                     href="/"
-                     className="text-3xl overflow-hidden font-bold">
-                     <Image
-                        src={logo}
-                        alt="ZBazar BD"
-                        className="max-w-[180px] lg:-ms-6 -ms-4"
-                     />
-                  </Link>
+                  <Logo />
                   <p className="mt-4 dark:text-accent-foreground/80 text-foreground/70 max-w-sm">
                      {storeData?.description ||
                         "Your one-stop shop for everything trendy and essential."}
@@ -221,7 +214,7 @@ export function Footer() {
                </TooltipProvider>
                <p className="text-sm text-foreground/60 dark:text-card-foreground/80">
                   © {new Date().getFullYear()}{" "}
-                  <span className="font-medium">{storeData?.name || "ZBazar BD"}</span>. All rights
+                  <span className="font-medium">{storeData?.name || "ZBazar"}</span>. All rights
                   reserved.
                </p>
             </div>

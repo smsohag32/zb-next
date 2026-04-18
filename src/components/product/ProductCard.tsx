@@ -103,7 +103,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                   {product.originalPrice && product.originalPrice > product.price && (
                      <Badge
                         variant="secondary"
-                        className="bg-red-600 hover:bg-red-700  font-normal bg-red-500  text-white rounded-sm text-[10px]">
+                        className="bg-primary hover:bg-primary/90  font-normal   text-white rounded-sm text-[10px]">
                         Save {product.originalPrice - product.price} ৳
                      </Badge>
                   )}

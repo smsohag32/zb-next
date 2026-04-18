@@ -46,10 +46,10 @@ export default function LoginPage() {
          {/* SEO */}
          <Seo
             storeData={{
-               metaTitle: "Login | ZBazar BD",
+               metaTitle: "Login | ZBazar",
                metaDescription:
-                  "Sign in to your ZBazar BD account to access your dashboard, orders, and exclusive deals.",
-               metaTags: ["login", "account", "signin", "ZBazar BD"],
+                  "Sign in to your ZBazar account to access your dashboard, orders, and exclusive deals.",
+               metaTags: ["login", "account", "signin", "ZBazar"],
             }}
          />
 
