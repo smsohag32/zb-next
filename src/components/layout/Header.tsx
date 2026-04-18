@@ -143,12 +143,7 @@ export function Header() {
                            side="left"
                            className="w-80 flex flex-col p-0">
                            <div className="flex flex-col gap-6 px-6 pt-6 pb-2">
-                              <Link
-                                 href="/"
-                                 className="text-2xl font-bold text-primary"
-                                 onClick={() => setMobileMenuOpen(false)}>
-                                 ZBazar
-                              </Link>
+                              <Logo />
                               <div className="relative">
                                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                  <Input
@@ -259,7 +254,7 @@ export function Header() {
                         variant="ghost"
                         size="icon"
                         aria-label="Open Cart"
-                        className="relative hover:bg-transparent md:hover:bg-transparent text-foreground   hover:text-accent"
+                        className="relative hidden md:flex  hover:bg-transparent md:hover:bg-transparent text-foreground   hover:text-accent"
                         onClick={openCart}>
                         <ShoppingBag className="h-5 w-5" />
                         {cartCount > 0 && (
