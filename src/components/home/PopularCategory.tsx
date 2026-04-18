@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
@@ -27,7 +27,7 @@ export function PopularCategory() {
 
             {loading ? (
                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-                  {Array.from({ length: 4 }).map((_, i) => (
+                  {Array.from({ length: 8 }).map((_, i) => (
                      <CategoryCardSkeleton key={i} />
                   ))}
                </div>
@@ -46,8 +46,8 @@ export function PopularCategory() {
                         viewport={{ once: true }}>
                         <Link
                            href={`/products?category=${category.slug}`}
-                           className="group block relative  rounded-sm overflow-hidden">
-                           <div className="relative  aspect-[4/4]">
+                           className="group block relative rounded-sm overflow-hidden text-center md:text-left">
+                           <div className="relative aspect-square w-full">
                               <img
                                  src={
                                     category?.image
@@ -57,8 +57,10 @@ export function PopularCategory() {
                                        )}/${category.image.replace(/^\/+/, "")}`
                                        : "/placeholder.svg"
                                  }
-                                 alt={category?.name + "Collections" || "Category"}
-                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 aspect-[3/4]"
+                                 alt={`${category?.name} Collections`}
+                                 width={400}
+                                 height={400}
+                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                               />
 
                               <div

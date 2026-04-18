@@ -78,6 +78,8 @@ export function HeroSection2({ heroContent }: { heroContent: HeroContentItem[] }
                            src={getImageUrl(slide.image)}
                            alt=""
                            className="w-full h-full object-cover blur-3xl scale-125 opacity-20"
+                           fetchPriority={index === 0 ? "high" : "auto"}
+                           loading={index === 0 ? "eager" : "lazy"}
                         />
                      </div>
 
@@ -87,7 +89,8 @@ export function HeroSection2({ heroContent }: { heroContent: HeroContentItem[] }
                            src={getImageUrl(slide.image)}
                            alt={`Hero slide ${index + 1}`}
                            className="w-full h-full object-fill md:object-fill ken-burns swiper-image"
-                           loading="eager"
+                           fetchPriority={index === 0 ? "high" : "auto"}
+                           loading={index === 0 ? "eager" : "lazy"}
                         />
 
                         {/* Professional Multi-Layer Overlays */}
