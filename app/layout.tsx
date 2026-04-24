@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Toaster } from "@/components/ui/toaster";
@@ -86,34 +85,35 @@ export default function RootLayout({
          lang="en"
          suppressHydrationWarning
          className={`${roboto.variable}`}>
-         <head />
-         <body>
+         <head>
             {/* Google Tag (gtag.js) */}
-            <Script
+            <script
+               async
                src="https://www.googletagmanager.com/gtag/js?id=G-NG09G1LZKM"
-               strategy="afterInteractive"
             />
-            <Script
-               id="google-analytics"
-               strategy="afterInteractive">
-               {`
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', 'G-NG09G1LZKM');
-               `}
-            </Script>
+            <script
+               dangerouslySetInnerHTML={{
+                  __html: `
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'G-NG09G1LZKM');
+                  `,
+               }}
+            />
 
             {/* Google Tag Manager */}
-            <Script
-               id="gtm-script"
-               strategy="afterInteractive">
-               {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            <script
+               dangerouslySetInnerHTML={{
+                  __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                    })(window,document,'script','dataLayer','GTM-WF498WDZ');`}
-            </Script>
+                    })(window,document,'script','dataLayer','GTM-WF498WDZ');`,
+               }}
+            />
+         </head>
+         <body>
             {/* Google Tag Manager (noscript) */}
             <noscript>
                <iframe
