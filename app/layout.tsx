@@ -86,10 +86,10 @@ export default function RootLayout({
          lang="en"
          suppressHydrationWarning
          className={`${roboto.variable}`}>
-         <head>
+         <head />
+         <body>
             {/* Google Tag (gtag.js) */}
             <Script
-               async
                src="https://www.googletagmanager.com/gtag/js?id=G-NG09G1LZKM"
                strategy="afterInteractive"
             />
@@ -114,8 +114,6 @@ export default function RootLayout({
                     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
                     })(window,document,'script','dataLayer','GTM-WF498WDZ');`}
             </Script>
-         </head>
-         <body>
             {/* Google Tag Manager (noscript) */}
             <noscript>
                <iframe
