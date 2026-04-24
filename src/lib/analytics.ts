@@ -3,7 +3,7 @@
  * https://developers.google.com/analytics/devguides/collection/ga4/ecommerce?client_type=gtag
  *
  * All prices are in BDT (numeric, no formatting).
- * Events are pushed via window.gtag which GTM (GTM-NFTV34J4) already loads.
+ * Events are pushed via window.gtag which GTM (GTM-WF498WDZ) already loads.
  */
 
 declare global {
