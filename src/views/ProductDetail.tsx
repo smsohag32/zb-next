@@ -54,6 +54,13 @@ import {
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
+import {
+   Dialog,
+   DialogContent,
+   DialogHeader,
+   DialogTitle,
+   DialogTrigger,
+} from "@/components/ui/dialog";
 
 import { RichTextViewer } from "@/components/RichTextViewer";
 import { RichTextSeeMoreViewer } from "@/components/RichTextSeeMoreViewer";
@@ -438,7 +445,25 @@ export default function ProductDetailPage() {
                                     {selectedSize || "Select a size"}
                                  </span>
                               </p>
-                              <button className="text-sm text-primary underline">Size Guide</button>
+                              <Dialog>
+                                 <DialogTrigger asChild>
+                                    <button className="text-sm text-primary underline hover:text-primary/80 transition-colors">
+                                       Size Guide
+                                    </button>
+                                 </DialogTrigger>
+                                 <DialogContent className="max-w-3xl w-[95vw] p-2 sm:p-6 rounded-lg">
+                                    <DialogHeader>
+                                       <DialogTitle className="text-center text-xl font-semibold mb-4">Size Guide</DialogTitle>
+                                    </DialogHeader>
+                                    <div className="relative w-full h-auto max-h-[80vh] overflow-y-auto overflow-x-hidden flex justify-center items-start rounded-md bg-white p-2 sm:p-4">
+                                       <img 
+                                          src="/size-guid.jpeg" 
+                                          alt="Size Guide" 
+                                          className="w-full h-auto object-contain rounded-md"
+                                       />
+                                    </div>
+                                 </DialogContent>
+                              </Dialog>
                            </div>
                            <div className="flex flex-wrap gap-2">
                               {product.sizes.map((size: any) => (
@@ -566,6 +591,7 @@ export default function ProductDetailPage() {
                         <TabsTrigger value="description">Description</TabsTrigger>
                         <TabsTrigger value="details">Details</TabsTrigger>
                         <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
+                        <TabsTrigger value="return-policy">Return Policy</TabsTrigger>
                      </TabsList>
                      <TabsContent
                         value="description"
@@ -741,6 +767,31 @@ export default function ProductDetailPage() {
                               )}
                            </div>
                         </div>
+                     </TabsContent>
+                     <TabsContent
+                        value="return-policy"
+                        className="mt-6">
+                        <Card className="p-6 lg:p-8">
+                           <div className="prose prose-sm sm:prose-base max-w-none text-muted-foreground space-y-4">
+                              <h3 className="text-xl font-semibold text-foreground">Return & Refund Policy</h3>
+                              <p>We want you to be completely satisfied with your purchase. If you are not entirely happy with your item, we are here to help.</p>
+                              
+                              <h4 className="text-lg font-medium text-foreground mt-6">Returns</h4>
+                              <ul className="list-disc pl-5 space-y-2">
+                                 <li>You have 7 days to return an item from the date you received it.</li>
+                                 <li>To be eligible for a return, your item must be unused and in the same condition that you received it.</li>
+                                 <li>Your item must be in the original packaging.</li>
+                                 <li>Your item needs to have the receipt or proof of purchase.</li>
+                              </ul>
+                              
+                              <h4 className="text-lg font-medium text-foreground mt-6">Refunds</h4>
+                              <p>Once we receive your item, we will inspect it and notify you that we have received your returned item. We will immediately notify you on the status of your refund after inspecting the item.</p>
+                              <p>If your return is approved, we will initiate a refund to your original method of payment. You will receive the credit within a certain amount of days, depending on your card issuer's policies.</p>
+                              
+                              <h4 className="text-lg font-medium text-foreground mt-6">Shipping</h4>
+                              <p>You will be responsible for paying for your own shipping costs for returning your item. Shipping costs are non-refundable. If you receive a refund, the cost of return shipping will be deducted from your refund.</p>
+                           </div>
+                        </Card>
                      </TabsContent>
                   </Tabs>
                </div>
