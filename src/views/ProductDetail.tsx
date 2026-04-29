@@ -457,9 +457,10 @@ export default function ProductDetailPage() {
                                     </DialogHeader>
                                     <div className="relative w-full h-auto max-h-[80vh] overflow-y-auto overflow-x-hidden flex justify-center items-start rounded-md bg-white p-2 sm:p-4">
                                        <img 
-                                          src="/size-guid.jpeg" 
+                                          src="/size-guid.webp" 
                                           alt="Size Guide" 
-                                          className="w-full h-auto object-contain rounded-md"
+                                         
+                                          className="w-full mx-auto  h-auto object-contain rounded-md"
                                        />
                                     </div>
                                  </DialogContent>
